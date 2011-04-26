@@ -1,0 +1,108 @@
+<!DOCTYPE HtMl>
+<html>
+<head>
+        <meta charset="utf-8"/>
+        <title>Menu</title>
+<style>
+body {
+    margin-top: 50px;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.listmanager-row {
+    height: 30px;
+    border: 1px solid #000;
+}
+
+.listmanager-row span {
+    display: block;
+    float: left;
+    margin: 5px;
+}
+
+.listmanager-add-row, .listmanager-remove-row {
+    display: block;
+    float: right;
+    color: #000;
+    text-decoration: none;
+    margin: 5px;
+}
+</style>
+</head>
+<body>
+
+<button>Add filter</button><button>Remove all filters</button>
+<div id="filters"></div>
+
+<script src="assets/js/mootools-core-1.3.js"></script>
+<script src="../Source/listManager.js"></script>
+<script src="../Source/searchFilters.js"></script>
+<script>
+window.addEvent('domready', function(){
+
+	var filter = new searchFilters('filters', {
+		'action': 'index.php'/*,
+		'filters': {
+			"column": {"type": "text", "title": "Column"},
+			"title": {"type": "text", "title": "Title"},
+			"content": {"type": "text", "title": "Content"},
+			"tag": {"type": "text", "title": "Tag"},
+			"protected": {"type": "text", "title": "Protected"},
+			"status": {"type": "text", "title": "Status"},
+			"created_date": {"type": "text", "title": "Created date"},
+			"modify_date": {"type": "text", "title": "Modify date"}
+		}*/
+	});
+
+var rowContent = function() {
+    
+    var content = new Element('span', {'text': (new Date())});
+    
+    var removeButton = new Element('a', {
+                        'href': '#',
+                        'class': 'listmanager-remove-row',
+                        'html': '<span>-</span>',
+                        'events': {
+                            'click': function(el){
+                                    filter.remove(document.id(el.target).getParent('.listmanager-row'));
+                                }
+                        }
+                    });
+
+    var addButton = new Element('a', {
+                        'href': '#',
+                        'class': 'listmanager-add-row',
+                        'html': '<span>+</span>',
+                        'events': {
+                            'click': function(el){
+                                    filter.add({
+                                        'rowHTML': rowContent(),
+                                        'target': document.id(el.target).getParent('.listmanager-row')
+                                    });
+                                }
+                        }
+                    });
+    
+    return [content, addButton, removeButton];
+    
+};
+
+$$('button')[0].addEvent('click', function(){
+    filter.add({
+        'rowHTML': rowContent()
+    });
+});
+
+$$('button')[1].addEvent('click', function(){
+    filter.removeAll();
+});
+
+});
+</script>
+</body>
+</html>
